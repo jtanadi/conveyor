@@ -1,5 +1,10 @@
-import { Request, Response, NextFunction } from "express"
-export default (req: Request, res: Response, next: NextFunction) => {
+import { Protocol, Request, Response } from "restana"
+
+export default (
+  req: Request<Protocol.HTTPS>,
+  res: Response<Protocol.HTTPS>,
+  next: () => void
+) => {
   if (req.headers["content-type"] !== "application/pdf") {
     throw new Error("Invalid content-type. Only application/pdf is supported.")
   }

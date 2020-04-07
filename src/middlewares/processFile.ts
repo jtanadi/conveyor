@@ -1,10 +1,14 @@
-import { Request, Response, NextFunction } from "express"
+import { Protocol, Request, Response } from "restana"
 import fs from "fs"
 import path from "path"
 import pdf2cairo from "../pdf2cairo"
 import { nanoid } from "nanoid"
 
-export default (req: Request, res: Response, next: NextFunction) => {
+export default (
+  req: Request<Protocol.HTTPS>,
+  res: Response<Protocol.HTTPS>,
+  next: () => void
+) => {
   const filename = nanoid()
   const tempDir = path.join(__dirname, "../../tmp/")
   const cairoOutputDir = path.join(tempDir, "cairo", filename)

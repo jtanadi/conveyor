@@ -5,8 +5,8 @@ interface Locals {
 }
 
 declare global {
-  module Express {
-    interface Request {
+  module Restana {
+    interface RequestExtensions {
       locals: Locals
     }
   }
