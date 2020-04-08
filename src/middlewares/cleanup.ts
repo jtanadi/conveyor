@@ -1,9 +1,10 @@
-import { Protocol, Request, Response } from "restana"
+import { Protocol, Response } from "restana"
+import { ExtendedRequest } from "../types"
 import path from "path"
 import rimraf from "rimraf"
 
 export default (
-  req: Request<Protocol.HTTPS>,
+  req: ExtendedRequest,
   res: Response<Protocol.HTTPS>,
   next: () => void
 ) => {

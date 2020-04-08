@@ -1,4 +1,5 @@
-import { Protocol, Request, Response } from "restana"
+import { Protocol, Response } from "restana"
+import { ExtendedRequest } from "../types"
 import fs from "fs"
 import path from "path"
 import s3 from "../utils/s3"
@@ -7,7 +8,7 @@ import { promisify } from "util"
 const readFile = promisify(fs.readFile)
 
 export default (
-  req: Request<Protocol.HTTPS>,
+  req: ExtendedRequest,
   res: Response<Protocol.HTTPS>,
   next: () => void
 ) => {
