@@ -1,4 +1,5 @@
-import { Request, Response, NextFunction } from "express"
+import { Protocol, Response } from "restana"
+import { ExtendedRequest } from "../types"
 import fs from "fs"
 import path from "path"
 import s3 from "../utils/s3"
@@ -6,7 +7,11 @@ import { promisify } from "util"
 
 const readFile = promisify(fs.readFile)
 
-export default (req: Request, res: Response, next: NextFunction) => {
+export default (
+  req: ExtendedRequest,
+  res: Response<Protocol.HTTPS>,
+  next: () => void
+) => {
   const { cairoDir, s3Dir } = req.locals
   fs.readdir(cairoDir, async (err, filenames) => {
     if (err) throw err

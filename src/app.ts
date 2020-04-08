@@ -1,12 +1,32 @@
-import express, { Application, Request, Response, NextFunction } from "express"
+import restana, { Protocol, Request, Response } from "restana"
+import { ExtendedRequest } from "./types"
 
-import { checkType, processFile, uploadToS3, cleanup } from "./middlewares/"
+import {
+  useHttps,
+  checkType,
+  processFile,
+  uploadToS3,
+  cleanup,
+} from "./middlewares/"
 
-const app: Application = express()
+const app = restana({
+  errorHandler(err, req, res) {
+    console.error(err)
+    res.send("Server error", 500)
+  },
+})
 
-app.get("/", (req: Request, res: Response): void => {
-  console.log(`Request received - ${req.url}`)
-  res.end()
+app.use(useHttps)
+
+app.get(
+  "/",
+  (req: Request<Protocol.HTTPS>, res: Response<Protocol.HTTPS>): void => {
+    res.send("", 301, { Location: "https://github.com/raa-tools/conveyor/" })
+  }
+)
+
+app.get("/api/ping", (req, res): void => {
+  res.send({ message: "OK" })
 })
 
 app.post(
@@ -15,16 +35,11 @@ app.post(
   processFile,
   uploadToS3,
   cleanup,
-  (req: Request, res: Response): void => {
+  (req: ExtendedRequest, res: Response<Protocol.HTTPS>): void => {
     console.log("conveyor success")
     const { s3Dir, pages } = req.locals
     res.send({ s3Dir, pages })
   }
 )
-
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error(err)
-  res.status(500).send("Server error")
-})
 
 export default app

@@ -1,17 +1,18 @@
-import { Request, Response, NextFunction } from "express"
+import { Protocol, Response } from "restana"
+import { ExtendedRequest } from "../types"
 import fs from "fs"
 import path from "path"
 import pdf2cairo from "../pdf2cairo"
 import { nanoid } from "nanoid"
 
-export default (req: Request, res: Response, next: NextFunction) => {
+export default (
+  req: ExtendedRequest,
+  res: Response<Protocol.HTTPS>,
+  next: () => void
+) => {
   const filename = nanoid()
   const tempDir = path.join(__dirname, "../../tmp/")
   const cairoOutputDir = path.join(tempDir, "cairo", filename)
-
-  /* if (!fs.existsSync(tempDir)) { */
-  /*   fs.mkdirSync(tempDir) */
-  /* } */
 
   if (!fs.existsSync(cairoOutputDir)) {
     fs.mkdirSync(cairoOutputDir, { recursive: true })
