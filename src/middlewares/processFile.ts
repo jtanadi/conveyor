@@ -30,7 +30,7 @@ export default (
     await pdf2cairo.convert(
       saveToPath,
       path.join(cairoOutputDir, "page"),
-      "png"
+      req.outFileType
     )
 
     next()
