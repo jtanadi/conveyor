@@ -1,4 +1,5 @@
 .env
 *.swp
+.eslintcache
 node_modules/
 sample-pdfs/
