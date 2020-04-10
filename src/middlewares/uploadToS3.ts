@@ -18,7 +18,7 @@ export default (
 
     const pages = []
     for await (const filename of filenames) {
-      if (path.extname(filename) === ".png") {
+      if (path.extname(filename).slice(1) === req.outFileType) {
         const filePath = path.join(cairoDir, filename)
 
         try {
