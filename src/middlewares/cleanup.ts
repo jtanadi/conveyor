@@ -7,7 +7,7 @@ export default (
   req: ExtendedRequest,
   res: Response<Protocol.HTTPS>,
   next: () => void
-) => {
+): void => {
   const dirToRemove = path.join(req.locals.cairoDir, "../..")
   rimraf(dirToRemove, (err: Error): void => {
     if (err) throw err

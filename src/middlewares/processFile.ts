@@ -9,7 +9,7 @@ export default (
   req: ExtendedRequest,
   res: Response<Protocol.HTTPS>,
   next: () => void
-) => {
+): void => {
   const filename = nanoid()
   const tempDir = path.join(__dirname, "../../tmp/")
   const cairoOutputDir = path.join(tempDir, "cairo", filename)

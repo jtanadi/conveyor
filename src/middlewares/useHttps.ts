@@ -5,7 +5,7 @@ export default (
   req: Request<Protocol.HTTPS>,
   res: Response<Protocol.HTTPS>,
   next: () => void
-) => {
+): void => {
   const host = req.headers.host
   const forwardedProtocol = req.headers["x-forwarded-proto"] || ""
   const isSecure =
