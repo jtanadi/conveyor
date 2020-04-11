@@ -11,8 +11,8 @@ const app = restana({
   },
 })
 
-app.use(useHttps)
 app.use(cors())
+app.use(useHttps)
 
 homeRoute(app)
 pingRoute(app)
