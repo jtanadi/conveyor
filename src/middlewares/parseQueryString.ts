@@ -7,7 +7,7 @@ export default (
   req: ExtendedRequest,
   res: Response<Protocol.HTTPS>,
   next: () => void
-) => {
+): void => {
   const qs = url.parse(req.url, true).query
 
   if (Array.isArray(qs.out) || Array.isArray(qs.download)) {

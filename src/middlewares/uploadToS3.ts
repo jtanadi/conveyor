@@ -11,7 +11,7 @@ export default (
   req: ExtendedRequest,
   res: Response<Protocol.HTTPS>,
   next: () => void
-) => {
+): void => {
   const { cairoDir, s3Dir } = req.locals
   fs.readdir(cairoDir, async (err, filenames) => {
     if (err) throw err
@@ -21,14 +21,15 @@ export default (
       if (path.extname(filename).slice(1) === req.outFileType) {
         const filePath = path.join(cairoDir, filename)
 
-        try {
-          const Body = await readFile(filePath)
-          const params = {
-            Bucket: process.env.S3_BUCKET,
-            Key: `${s3Dir}/${filename}`,
-            Body,
-          }
+        const Body = await readFile(filePath)
+        const params = {
+          Bucket: process.env.S3_BUCKET,
+          Key: `${s3Dir}/${filename}`,
+          Body,
+        }
 
+        /* eslint-disable no-useless-catch */
+        try {
           const s3data = await s3.putObject(params).promise()
           console.log(s3data)
           pages.push(filename)

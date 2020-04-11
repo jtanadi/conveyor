@@ -5,7 +5,9 @@ import ping from "./ping"
 
 export { pdf as pdfRoute, ping as pingRoute }
 
-export const homeRoute = (app: Service<Protocol.HTTPS | Protocol.HTTP>) => {
+export const homeRoute = (
+  app: Service<Protocol.HTTPS | Protocol.HTTP>
+): void => {
   app.get(
     "/",
     (req: Request<Protocol.HTTPS>, res: Response<Protocol.HTTPS>): void => {
@@ -13,4 +15,3 @@ export const homeRoute = (app: Service<Protocol.HTTPS | Protocol.HTTP>) => {
     }
   )
 }
-
