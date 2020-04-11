@@ -6,5 +6,5 @@ export default (
   next: () => void
 ): void => {
   next()
-  res.send({ message: "Processing file" })
+  res.send({ message: "Processing file" }, 200)
 }

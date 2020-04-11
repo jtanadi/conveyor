@@ -20,7 +20,7 @@ export default (
 
   const pingback = req.headers["x-pingback"]
   req.pingback = Array.isArray(pingback) ? pingback[0] : pingback
-  console.log("Request OK: pingback provided")
+  console.log(`Request OK: pingback ${req.pingback} provided`)
 
   queue.push(req.pingback)
 
