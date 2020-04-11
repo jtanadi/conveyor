@@ -10,4 +10,5 @@ export interface ExtendedRequest extends Request<Protocol.HTTPS> {
   locals: Locals
   outFileType: string
   clientDownload: boolean
+  pingback: string
 }
