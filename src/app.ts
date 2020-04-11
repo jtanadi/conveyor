@@ -1,7 +1,6 @@
 import restana from "restana"
-import cors from "cors"
 
-import { useHttps } from "./middlewares"
+import { useHttps, cors } from "./middlewares"
 import { homeRoute, pingRoute, pdfRoute } from "./routes"
 
 const app = restana({
@@ -11,7 +10,7 @@ const app = restana({
   },
 })
 
-app.use(cors())
+app.use(cors)
 app.use(useHttps)
 
 homeRoute(app)
