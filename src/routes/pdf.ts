@@ -9,7 +9,7 @@ import {
   cleanup,
 } from "../middlewares/"
 
-export default (app: Service<Protocol.HTTPS | Protocol.HTTP>) => {
+export default (app: Service<Protocol.HTTPS | Protocol.HTTP>): void => {
   app.post(
     "/api/convert/pdf",
     checkType,
