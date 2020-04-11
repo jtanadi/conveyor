@@ -1,9 +1,11 @@
 import { Protocol, Response } from "restana"
-import { ExtendedRequest } from "../types"
 import fs from "fs"
 import path from "path"
-import s3 from "../utils/s3"
 import { promisify } from "util"
+
+import { ExtendedRequest } from "../types"
+import s3 from "../utils/s3"
+import queue from "../utils/queue"
 
 const readFile = promisify(fs.readFile)
 
@@ -39,6 +41,7 @@ export default (
       }
     }
     req.locals.pages = pages
+    queue.shift()
     next()
   })
 }
