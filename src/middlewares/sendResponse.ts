@@ -5,6 +5,7 @@ export default (
   res: Response<Protocol.HTTPS>,
   next: () => void
 ): void => {
-  next()
+  console.log("response")
   res.send({ message: "Processing file" }, 200)
+  next()
 }

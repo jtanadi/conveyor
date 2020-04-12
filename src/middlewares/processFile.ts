@@ -10,6 +10,7 @@ export default (
   res: Response<Protocol.HTTPS>,
   next: () => void
 ): void => {
+  console.log("starting to process")
   const filename = nanoid()
   const tempDir = path.join(__dirname, "../../tmp/")
   const cairoOutputDir = path.join(tempDir, "cairo", filename)
@@ -33,6 +34,7 @@ export default (
       req.outFileType
     )
 
+    console.log("file processed")
     next()
   })
 
