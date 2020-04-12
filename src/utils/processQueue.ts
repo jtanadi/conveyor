@@ -5,14 +5,15 @@ import queue from "./queue"
 import tempDir from "./tempDir"
 import uploadToS3 from "./uploadToS3"
 
+type PostData = {
+  roomID?: string
+  s3Dir: string
+  pages: string[]
+}
+
 export default async (): Promise<void> => {
-  const {
-    pingback,
-    filename,
-    inputFilePath,
-    outputDir,
-    outFileType,
-  } = queue.dequeue()
+  const task = queue.dequeue()
+  const { pingback, filename, inputFilePath, outputDir, outFileType } = task
 
   /* eslint-disable no-useless-catch */
   try {
@@ -21,7 +22,12 @@ export default async (): Promise<void> => {
 
     const pages = await uploadToS3(outputDir, filename, outFileType)
 
-    axios.post(pingback, { s3Dir: filename, pages })
+    let postData: PostData = { s3Dir: filename, pages }
+    if (task.roomID) {
+      postData.roomID = task.roomID
+    }
+
+    axios.post(pingback, postData)
 
     queue.cleanup(tempDir)
   } catch (e) {

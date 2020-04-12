@@ -21,5 +21,8 @@ export default (
   req.pingback = Array.isArray(pingback) ? pingback[0] : pingback
   console.log(`Request OK: pingback ${req.pingback} provided`)
 
+  const roomID = req.headers["x-RoomID"]
+  req.roomID = Array.isArray(roomID) ? roomID[0] : roomID
+
   next()
 }

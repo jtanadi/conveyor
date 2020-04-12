@@ -1,6 +1,7 @@
 import rimraf from "rimraf"
 
 export type Task = {
+  roomID?: string
   pingback: string
   outFileType: string
   clientDownload: boolean

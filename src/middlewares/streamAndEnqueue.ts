@@ -25,6 +25,7 @@ export default (
 
   req.on("end", async () => {
     const task: Task = {
+      roomID: req.roomID,
       pingback: req.pingback,
       outFileType: req.outFileType,
       clientDownload: req.clientDownload,
