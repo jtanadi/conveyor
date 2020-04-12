@@ -1,7 +1,6 @@
 import { Protocol, Response } from "restana"
 
 import { ExtendedRequest } from "../types"
-import queue from "../utils/queue"
 
 export default (
   req: ExtendedRequest,
@@ -22,7 +21,8 @@ export default (
   req.pingback = Array.isArray(pingback) ? pingback[0] : pingback
   console.log(`Request OK: pingback ${req.pingback} provided`)
 
-  queue.push(req.pingback)
+  const roomID = req.headers["x-RoomID"]
+  req.roomID = Array.isArray(roomID) ? roomID[0] : roomID
 
   next()
 }

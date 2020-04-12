@@ -1,17 +1,13 @@
-import cleanup from "./cleanup"
 import parseHeader from "./parseHeader"
 import parseQueryString from "./parseQueryString"
-import processFile from "./processFile"
 import sendResponse from "./sendResponse"
-import uploadToS3 from "./uploadToS3"
+import streamAndEnqueue from "./streamAndEnqueue"
 import useHttps from "./useHttps"
 
 export {
-  cleanup,
   parseHeader,
   parseQueryString,
-  processFile,
   sendResponse,
-  uploadToS3,
+  streamAndEnqueue,
   useHttps,
 }
