@@ -2,8 +2,10 @@ import { Protocol, Response } from "restana"
 import { ExtendedRequest } from "../types"
 import fs from "fs"
 import path from "path"
-import pdf2cairo from "../pdf2cairo"
 import { nanoid } from "nanoid"
+
+import queue, { Task } from "../utils/queue"
+import tempDir from "../utils/tempDir"
 
 export default (
   req: ExtendedRequest,
@@ -11,7 +13,6 @@ export default (
   next: () => void
 ): void => {
   const filename = nanoid()
-  const tempDir = path.join(__dirname, "../../tmp/")
   const cairoOutputDir = path.join(tempDir, "cairo", filename)
 
   if (!fs.existsSync(cairoOutputDir)) {
@@ -20,28 +21,19 @@ export default (
   }
 
   const saveToPath = path.join(tempDir, `${filename}.pdf`)
-  console.log(`streaming to ${saveToPath}`)
   req.pipe(fs.createWriteStream(saveToPath))
 
   req.on("end", async () => {
-    req.locals = {
-      cairoDir: cairoOutputDir,
-      s3Dir: filename,
+    const task: Task = {
+      pingback: req.pingback,
+      outFileType: req.outFileType,
+      clientDownload: req.clientDownload,
+      filename,
+      inputFilePath: saveToPath,
+      outputDir: cairoOutputDir,
     }
 
-    /* eslint-disable no-useless-catch */
-    try {
-      await pdf2cairo.convert(
-        saveToPath,
-        path.join(cairoOutputDir, "page"),
-        req.outFileType
-      )
-    } catch (e) {
-      console.error("cairo error")
-      throw e
-    }
-
-    console.log("file processed")
+    queue.enqueue(task)
     next()
   })
 
