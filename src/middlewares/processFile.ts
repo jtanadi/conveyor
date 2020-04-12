@@ -16,10 +16,12 @@ export default (
   const cairoOutputDir = path.join(tempDir, "cairo", filename)
 
   if (!fs.existsSync(cairoOutputDir)) {
+    console.log(`creating ${cairoOutputDir}`)
     fs.mkdirSync(cairoOutputDir, { recursive: true })
   }
 
   const saveToPath = path.join(tempDir, `${filename}.pdf`)
+  console.log(`streaming to ${saveToPath}`)
   req.pipe(fs.createWriteStream(saveToPath))
 
   req.on("end", async () => {
