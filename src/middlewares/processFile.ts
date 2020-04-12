@@ -10,7 +10,6 @@ export default (
   res: Response<Protocol.HTTPS>,
   next: () => void
 ): void => {
-  console.log("starting to process")
   const filename = nanoid()
   const tempDir = path.join(__dirname, "../../tmp/")
   const cairoOutputDir = path.join(tempDir, "cairo", filename)
@@ -25,17 +24,22 @@ export default (
   req.pipe(fs.createWriteStream(saveToPath))
 
   req.on("end", async () => {
-    console.log("req on end")
     req.locals = {
       cairoDir: cairoOutputDir,
       s3Dir: filename,
     }
 
-    await pdf2cairo.convert(
-      saveToPath,
-      path.join(cairoOutputDir, "page"),
-      req.outFileType
-    )
+    /* eslint-disable no-useless-catch */
+    try {
+      await pdf2cairo.convert(
+        saveToPath,
+        path.join(cairoOutputDir, "page"),
+        req.outFileType
+      )
+    } catch (e) {
+      console.error("cairo error")
+      throw e
+    }
 
     console.log("file processed")
     next()
