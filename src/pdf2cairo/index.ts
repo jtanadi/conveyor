@@ -26,6 +26,7 @@ class PDF2Cairo {
     outputPath: string,
     outputFormat?: string
   ): Promise<void> {
+    console.log(`converting ${inputPath} to ${outputPath}`)
     return new Promise((resolve, reject) => {
       const format = outputFormat ? this.parseFormat(outputFormat) : "-jpeg"
       const p2c = spawn("pdftocairo", [format, inputPath, outputPath])

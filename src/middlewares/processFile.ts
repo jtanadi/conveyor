@@ -25,6 +25,7 @@ export default (
   req.pipe(fs.createWriteStream(saveToPath))
 
   req.on("end", async () => {
+    console.log("req on end")
     req.locals = {
       cairoDir: cairoOutputDir,
       s3Dir: filename,
