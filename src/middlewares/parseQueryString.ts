@@ -30,5 +30,7 @@ export default (
   req.outFileType = outFileType
   req.clientDownload = qs.download?.toLowerCase() === "true" ? true : false
 
+  console.log(req.outFileType, req.clientDownload)
+
   next()
 }
