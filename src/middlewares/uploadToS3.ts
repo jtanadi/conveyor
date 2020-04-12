@@ -30,8 +30,6 @@ export default (
           Body,
         }
 
-        console.log(`uploading ${filename}`)
-
         /* eslint-disable no-useless-catch */
         try {
           const s3data = await s3.putObject(params).promise()
