@@ -16,7 +16,6 @@ export default (
   const cairoOutputDir = path.join(tempDir, "cairo", filename)
 
   if (!fs.existsSync(cairoOutputDir)) {
-    console.log(`creating ${cairoOutputDir}`)
     fs.mkdirSync(cairoOutputDir, { recursive: true })
   }
 
@@ -25,13 +24,16 @@ export default (
 
   req.on("end", async () => {
     const task: Task = {
-      roomID: req.roomID,
       pingback: req.pingback,
       outFileType: req.outFileType,
       clientDownload: req.clientDownload,
       filename,
       inputFilePath: saveToPath,
       outputDir: cairoOutputDir,
+    }
+
+    if (req.forwardData) {
+      task.forwardData = req.forwardData
     }
 
     queue.enqueue(task)

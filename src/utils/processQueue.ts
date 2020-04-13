@@ -6,9 +6,9 @@ import tempDir from "./tempDir"
 import uploadToS3 from "./uploadToS3"
 
 type PostData = {
-  roomID?: string
   s3Dir: string
   pages: string[]
+  forwardData?: string
 }
 
 export default async (): Promise<void> => {
@@ -23,8 +23,8 @@ export default async (): Promise<void> => {
     const pages = await uploadToS3(outputDir, filename, outFileType)
 
     let postData: PostData = { s3Dir: filename, pages }
-    if (task.roomID) {
-      postData.roomID = task.roomID
+    if (task.forwardData) {
+      postData.forwardData = task.forwardData
     }
 
     axios.post(pingback, postData)

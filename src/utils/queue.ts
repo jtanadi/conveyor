@@ -1,13 +1,13 @@
 import rimraf from "rimraf"
 
 export type Task = {
-  roomID?: string
   pingback: string
   outFileType: string
   clientDownload: boolean
   filename: string
   inputFilePath: string
   outputDir: string
+  forwardData?: string
 }
 
 class Queue {
