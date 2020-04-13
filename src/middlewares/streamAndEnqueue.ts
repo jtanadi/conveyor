@@ -5,13 +5,13 @@ import path from "path"
 import { nanoid } from "nanoid"
 
 import queue, { Task } from "../utils/queue"
-import tempDir from "../utils/tempDir"
 
 export default (
   req: ExtendedRequest,
   res: Response<Protocol.HTTPS>,
   next: () => void
 ): void => {
+  const tempDir = path.join(__dirname, "../../tmp/")
   const filename = nanoid()
   const cairoOutputDir = path.join(tempDir, "cairo", filename)
 
