@@ -1,6 +1,6 @@
 import { Service, Protocol } from "restana"
 import {
-  parseHeader,
+  parseHeaders,
   parseQueryString,
   sendResponse,
   streamAndEnqueue,
@@ -9,7 +9,7 @@ import {
 export default (app: Service<Protocol.HTTPS | Protocol.HTTP>): void => {
   app.post(
     "/api/convert/pdf",
-    parseHeader,
+    parseHeaders,
     parseQueryString,
     streamAndEnqueue,
     sendResponse
