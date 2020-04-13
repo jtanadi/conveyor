@@ -1,5 +1,3 @@
-import rimraf from "rimraf"
-
 export type Task = {
   pingback: string
   outFileType: string
@@ -23,15 +21,6 @@ class Queue {
 
   dequeue(): Task {
     return this.queue.shift()
-  }
-
-  cleanup(dirToRemove: string): void {
-    if (!this.queue.length) {
-      rimraf(dirToRemove, (err: Error): void => {
-        if (err) throw err
-        console.log(`success deleting ${dirToRemove}`)
-      })
-    }
   }
 }
 
