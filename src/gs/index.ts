@@ -34,7 +34,7 @@ class GhostAdaptor {
     inputPath: string,
     outputPath: string,
     outputFormat: string = "jpeg",
-    resolution: number = 150
+    resolution: number = 72
   ): Promise<void> {
     return new Promise((resolve, reject) => {
       const { device, extension } = this.parseFormat(outputFormat)
