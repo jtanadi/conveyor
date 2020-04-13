@@ -5,8 +5,9 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "dev": "TEST_PORT=$TEST_PORT ts-node test-server/index.ts & nodemon",
+    "dev": "nodemon",
     "start": "node dist/index.js",
+    "dev:test-server": "ts-node test-server/index.ts & npm run dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
