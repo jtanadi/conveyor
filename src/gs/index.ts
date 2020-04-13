@@ -39,14 +39,10 @@ class GhostAdaptor {
     return new Promise((resolve, reject) => {
       const { device, extension } = this.parseFormat(outputFormat)
 
-      console.log(
-        `RUNNING: gs ${device} -o ${outputPath}-%d${extension} -r${resolution} ${inputPath}`
-      )
-
       const gs = spawn("gs", [
         device,
         "-o",
-        `${outputPath}-%d${extension}`,
+        `${outputPath}%03d${extension}`,
         `-r${resolution}`,
         inputPath,
       ])
