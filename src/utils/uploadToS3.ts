@@ -20,7 +20,7 @@ export default (
     fs.readdir(cairoDir, async (err, filenames) => {
       if (err) throw err
 
-      const pages: string[] = []
+      const retFiles: string[] = []
       for await (const filename of filenames) {
         if (path.extname(filename).slice(1) === outFileType) {
           const filePath = path.join(cairoDir, filename)
@@ -36,13 +36,13 @@ export default (
           try {
             const s3data = await s3.putObject(params).promise()
             console.log(s3data)
-            pages.push(filename)
+            retFiles.push(filename)
           } catch (err) {
             reject(err)
           }
         }
       }
-      resolve(pages)
+      resolve(retFiles.sort())
     })
   })
 }
