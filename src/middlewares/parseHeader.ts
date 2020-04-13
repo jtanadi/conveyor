@@ -24,7 +24,5 @@ export default (
   const forwardData = req.headers["x-forward-data"]
   req.forwardData = Array.isArray(forwardData) ? forwardData[0] : forwardData
 
-  console.log(req.forwardData)
-
   next()
 }
