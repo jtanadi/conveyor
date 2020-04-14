@@ -1,7 +1,7 @@
 // Mapping of common format names and ghostscript "devices"
 // https://www.ghostscript.com/doc/9.22/Devices.htm
 const acceptableFormats = new Map()
-acceptableFormats.set("png", "png256")
+acceptableFormats.set("png", "pngalpha")
 acceptableFormats.set("jpg", "jpeg")
 acceptableFormats.set("tif", "tiff24nc")
 acceptableFormats.set("ps", "ps2write")
