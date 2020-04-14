@@ -6,7 +6,7 @@ Currently supports PDF -> image -> S3, but in the future should support a variet
 
 ## Using Conveyor
 
-Conveyor converts with `pdftocairo` and uses a task queue to keep track of files to be converted and uploaded. When a task has been completed, the service sends data to a `pingback` address.
+Conveyor converts with `GhostScript` and uses a task queue to keep track of files to be converted and uploaded. When a task has been completed, the service sends data to a `pingback` address.
 
 ### Sending Files
 
@@ -35,10 +35,10 @@ The body of the request will take the following form:
   s3Dir: "abcdef123",
 
   // array of page files
-  pages: [
-    "page-1.png",
-    "page-2.png",
-    "page-3.png",
+  files: [
+    "page001.png",
+    "page002.png",
+    "page003.png",
     etc.
   ],
 
