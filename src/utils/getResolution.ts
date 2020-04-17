@@ -5,8 +5,8 @@ const MAX_PIXELS = {
 }
 
 export default (dims: number[][]): number => {
-  let maxWidth = -Infinity
-  let maxHeight = -Infinity
+  let maxWidth = 0
+  let maxHeight = 0
 
   for (const dim of dims) {
     if (dim[0] > maxWidth) {
@@ -19,8 +19,8 @@ export default (dims: number[][]): number => {
   }
 
   if (maxHeight >= maxWidth) {
-    return MAX_PIXELS.HEIGHT / maxHeight
+    return Math.round(MAX_PIXELS.HEIGHT / maxHeight)
   }
 
-  return MAX_PIXELS.WIDTH / maxWidth
+  return Math.round(MAX_PIXELS.WIDTH / maxWidth)
 }
