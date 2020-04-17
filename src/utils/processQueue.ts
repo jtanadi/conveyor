@@ -19,28 +19,30 @@ export default async (): Promise<void> => {
 
   const { pingback, filename, inputFilePath, outputDir, outFileType } = task
 
-  // Get page measurements and calculate resolution based on max sizes
-  // Measurements are arrays of [width, height]
-  const measurements: number[][] = await measurePDF(inputFilePath)
-  const outputResolution = getResolution(measurements)
+  try {
+    // Get page measurements and calculate resolution based on max sizes
+    // Measurements are arrays of [width, height]
+    const measurements: number[][] = await measurePDF(inputFilePath)
+    const outputResolution = getResolution(measurements)
 
-  const outputFilePath = path.join(outputDir, "page")
-  gs.convert(inputFilePath, outputFilePath, outFileType, outputResolution)
-    .then(() => {
-      return uploadToS3(outputDir, filename, outFileType)
-    })
-    .then((files) => {
-      const postData: PostData = { s3Dir: filename, files }
-      if (task.forwardData) {
-        postData.forwardData = task.forwardData
-      }
+    const outputFilePath = path.join(outputDir, "page")
+    await gs.convert(
+      inputFilePath,
+      outputFilePath,
+      outFileType,
+      outputResolution
+    )
 
-      axios.post(pingback, postData)
-    })
-    .then(() => {
-      cleanup(outputDir)
-    })
-    .catch((err) => {
-      throw err
-    })
+    const files = await uploadToS3(outputDir, filename, outFileType)
+    const postData: PostData = { s3Dir: filename, files }
+    if (task.forwardData) {
+      postData.forwardData = task.forwardData
+    }
+
+    await axios.post(pingback, postData)
+    cleanup(outputDir)
+  } catch (e) {
+    console.log(`Error with task ${task}`)
+    console.log(e.stack)
+  }
 }
