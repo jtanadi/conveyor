@@ -25,6 +25,8 @@ export default async (): Promise<void> => {
     const measurements: number[][] = await measurePDF(inputFilePath)
     const outputResolution = getResolution(measurements)
 
+    console.log(`Converting at ${outputResolution}DPI`)
+
     const outputFilePath = path.join(outputDir, "page")
     await gs.convert(
       inputFilePath,
