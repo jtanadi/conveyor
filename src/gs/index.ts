@@ -30,28 +30,56 @@ class GhostAdaptor {
     return { device: `-sDEVICE=${deviceFormat}`, extension: `.${outputFormat}` }
   }
 
+  private getArgs(
+    device: string,
+    inputPath: string,
+    outputPath: string,
+    extension: string,
+    resolution: number,
+    page?: number
+  ): string[] {
+    const retArgs = [device, `-r${resolution}`]
+
+    if (page) {
+      retArgs.push(
+        `-sPageList=${page}`,
+        "-o",
+        `${outputPath}${page.toString().padStart(3, "0")}${extension}`
+      )
+    } else {
+      retArgs.push("-o", `${outputPath}%03d${extension}`)
+    }
+
+    retArgs.push(inputPath)
+
+    return retArgs
+  }
+
   convert(
     inputPath: string,
     outputPath: string,
     outputFormat: string = "jpeg",
-    resolution: number = 72
+    resolution: number = 72,
+    page?: number
   ): Promise<void> {
     return new Promise((resolve, reject) => {
       const { device, extension } = this.parseFormat(outputFormat)
-
-      const gs = spawn("gs", [
+      const gsArgs = this.getArgs(
         device,
-        "-o",
-        `${outputPath}%03d${extension}`,
-        `-r${resolution}`,
         inputPath,
-      ])
+        outputPath,
+        extension,
+        resolution,
+        page
+      )
 
-      gs.stderr.on("data", (data: string): void => {
+      const gsProcess = spawn("gs", gsArgs)
+
+      gsProcess.stderr.on("data", (data: string): void => {
         reject(`ghostscript error: ${data}`)
       })
 
-      gs.on("close", (code: string): void => {
+      gsProcess.on("close", (code: string): void => {
         resolve()
         console.log(`ghostscript exited with code ${code}`)
       })
