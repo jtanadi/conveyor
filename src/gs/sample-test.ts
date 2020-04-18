@@ -1,22 +1,29 @@
 import fs from "fs"
 import path from "path"
+import rimraf from "rimraf"
 
 import gs from "./"
 
 const containingDir = "../../sample-pdfs/"
 const filename = "large-drawing.pdf"
 const ext = path.extname(filename)
-const outputDir = path.join("output", path.basename(filename, ext))
+const outputDir = path.join(
+  containingDir,
+  "output",
+  path.basename(filename, ext)
+)
 
-if (fs.existsSync(path.join(containingDir, outputDir))) {
-  fs.rmdirSync(path.join(containingDir, outputDir))
+if (fs.existsSync(outputDir)) {
+  rimraf.sync(outputDir)
 }
+fs.mkdirSync(outputDir)
 
-fs.mkdirSync(path.join(containingDir, outputDir))
-
+const start = Date.now()
 gs.convert(
   path.join(containingDir, filename),
-  path.join(containingDir, outputDir, path.basename(filename, ext)),
+  path.join(outputDir, path.basename(filename, ext)),
   "png",
-  72
-)
+  150
+).then(() => {
+  console.log(`gs took ${Date.now() - start}ms`)
+})
