@@ -3,7 +3,7 @@ import path from "path"
 
 import cleanup from "./cleanup"
 import measurePDF from "./measurePDF"
-import getResolution from "./getResolution"
+import getResolutions from "./getResolutions"
 import gs from "../gs"
 import queue from "./queue"
 import uploadToS3 from "./uploadToS3"
@@ -20,19 +20,20 @@ export default async (): Promise<void> => {
   const { pingback, filename, inputFilePath, outputDir, outFileType } = task
 
   try {
-    // Get page measurements and calculate resolution based on max sizes
-    // Measurements are arrays of [width, height]
     const measurements: number[][] = await measurePDF(inputFilePath)
-    const outputResolution = getResolution(measurements)
-
-    console.log(`Converting at ${outputResolution}DPI`)
-
+    const outputResolutions: number[] = getResolutions(measurements)
     const outputFilePath = path.join(outputDir, "page")
-    await gs.convert(
-      inputFilePath,
-      outputFilePath,
-      outFileType,
-      outputResolution
+
+    await Promise.all(
+      outputResolutions.map((resolution, i) => {
+        return gs.convert(
+          inputFilePath,
+          outputFilePath,
+          outFileType,
+          resolution,
+          i + 1
+        )
+      })
     )
 
     const files = await uploadToS3(outputDir, filename, outFileType)
@@ -41,8 +42,8 @@ export default async (): Promise<void> => {
       postData.forwardData = task.forwardData
     }
 
-    await axios.post(pingback, postData)
-    cleanup(outputDir)
+    axios.post(pingback, postData)
+    cleanup(inputFilePath, outputDir)
   } catch (e) {
     console.log(`Error with task ${task}`)
     console.log(e.stack)
