@@ -4,7 +4,7 @@ const MAX_PIXELS = {
   HEIGHT: 1650,
 }
 
-export default (dims: number[][]): number => {
+export default (dims: number[][]): number[] => {
   let maxWidth = 0
   let maxHeight = 0
 
@@ -18,9 +18,11 @@ export default (dims: number[][]): number => {
     }
   }
 
-  if (maxHeight >= maxWidth) {
-    return Math.round(MAX_PIXELS.HEIGHT / maxHeight)
-  }
-
-  return Math.round(MAX_PIXELS.WIDTH / maxWidth)
+  return dims.map((dim: number[]) => {
+    if (dim[0] < dim[1]) {
+      return Math.round(MAX_PIXELS.WIDTH / dim[0])
+    } else {
+      return Math.round(MAX_PIXELS.HEIGHT / dim[1])
+    }
+  })
 }
