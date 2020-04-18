@@ -20,16 +20,20 @@ fs.mkdirSync(outputDir)
 
 const start = Date.now()
 
-gs.convert(
-  path.join(containingDir, filename),
-  path.join(outputDir, path.basename(filename, ext)),
-  "png",
-  150
-).then(() => {
-  console.log(`gs took ${Date.now() - start}ms`)
-})
+/* gs.convert( */
+/*   path.join(containingDir, filename), */
+/*   path.join(outputDir, path.basename(filename, ext)), */
+/*   "png", */
+/*   150 */
+/* ).then(() => { */
+/*   console.log(`gs took ${Date.now() - start}ms`) */
+/* }) */
 
-const resolutions = [14, 72, 150, 31, 48]
+const resolutions = []
+for (let i = 0; i < 14; i++) {
+  resolutions[i] = 150
+}
+
 Promise.all(
   resolutions.map((res, i) => {
     console.log(`Outputting page ${i + 1} at ${res}`)
