@@ -4,7 +4,8 @@ import fs from "fs"
 import path from "path"
 import { nanoid } from "nanoid"
 
-import queue, { Task } from "../utils/queue"
+import postPingback from "../utils/postPingback"
+import queue, { Task } from "../queue"
 
 export default (
   req: ExtendedRequest,
@@ -13,10 +14,10 @@ export default (
 ): void => {
   const tempDir = path.join(__dirname, "../../tmp/")
   const filename = nanoid()
-  const cairoOutputDir = path.join(tempDir, "cairo", filename)
+  const outputDir = path.join(tempDir, "gs", filename)
 
-  if (!fs.existsSync(cairoOutputDir)) {
-    fs.mkdirSync(cairoOutputDir, { recursive: true })
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir, { recursive: true })
   }
 
   const saveToPath = path.join(tempDir, `${filename}.pdf`)
@@ -29,18 +30,24 @@ export default (
       clientDownload: req.clientDownload,
       filename,
       inputFilePath: saveToPath,
-      outputDir: cairoOutputDir,
+      outputDir,
     }
 
     if (req.forwardData) {
       task.forwardData = req.forwardData
     }
 
+    postPingback(req.pingback, {
+      status: "processing",
+      message: "Queuing up task",
+    })
+
     queue.enqueue(task)
     next()
   })
 
   req.on("error", (e: Error) => {
+    postPingback(req.pingback, { status: "error", message: e.message })
     throw e
   })
 }

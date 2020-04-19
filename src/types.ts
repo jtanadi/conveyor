@@ -6,3 +6,14 @@ export interface ExtendedRequest extends Request<Protocol.HTTPS> {
   pingback: string
   forwardData?: string
 }
+
+export type EndMessage = {
+  s3Dir: string
+  files: string[]
+  forwardData?: string
+}
+
+export type PingbackData = {
+  status: string
+  message: string | EndMessage
+}
