@@ -22,6 +22,11 @@ class Queue {
   dequeue(): Task {
     return this.queue.shift()
   }
+
+  processTask(cb: (task: Task) => void | Promise<void>): void {
+    const task = this.dequeue()
+    cb(task)
+  }
 }
 
 export default new Queue()
