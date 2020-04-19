@@ -22,7 +22,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "nanoid": "^3.0.2",
-    "pdf2json": "^1.2.0",
+    "pdf2json": "raa-tools/pdf2json#master",
     "restana": "^4.3.1",
     "rimraf": "^3.0.2"
   },
