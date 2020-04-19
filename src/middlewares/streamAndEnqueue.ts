@@ -31,15 +31,13 @@ export default (
       filename,
       inputFilePath: saveToPath,
       outputDir,
-    }
-
-    if (req.forwardData) {
-      task.forwardData = req.forwardData
+      forwardData: req.forwardData,
     }
 
     postPingback(req.pingback, {
       status: "processing",
       message: "Queuing up task",
+      forwardData: task.forwardData,
     })
 
     queue.enqueue(task)
@@ -47,7 +45,6 @@ export default (
   })
 
   req.on("error", (e: Error) => {
-    postPingback(req.pingback, { status: "error", message: e.message })
     throw e
   })
 }

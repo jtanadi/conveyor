@@ -10,10 +10,10 @@ export interface ExtendedRequest extends Request<Protocol.HTTPS> {
 export type EndMessage = {
   s3Dir: string
   files: string[]
-  forwardData?: string
 }
 
 export type PingbackData = {
   status: string
   message: string | EndMessage
+  forwardData: string | null
 }

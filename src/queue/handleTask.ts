@@ -5,7 +5,6 @@ import measurePDF from "../utils/measurePDF"
 import getResolutions from "../utils/getResolutions"
 import postPingback from "../utils/postPingback"
 import gs from "../gs"
-import { EndMessage } from "../types"
 import { Task } from "./"
 import uploadToS3 from "../utils/uploadToS3"
 
@@ -16,6 +15,7 @@ export default async (task: Task): Promise<void> => {
     postPingback(pingback, {
       status: "processing",
       message: "Converting file",
+      forwardData: task.forwardData,
     })
 
     const measurements: number[][] = await measurePDF(inputFilePath)
@@ -37,6 +37,7 @@ export default async (task: Task): Promise<void> => {
     postPingback(pingback, {
       status: "processing",
       message: "Uploading to S3",
+      forwardData: task.forwardData,
     })
 
     // Disable uploading and posting in testing
@@ -48,15 +49,15 @@ export default async (task: Task): Promise<void> => {
           s3Dir: "s3-directory-abcde",
           files: ["sample-file1.png", "sample-file2.png"],
         },
+        forwardData: task.forwardData,
       })
     } else {
       const files = await uploadToS3(outputDir, filename, outFileType)
-      const postData: EndMessage = { s3Dir: filename, files }
-      if (task.forwardData) {
-        postData.forwardData = task.forwardData
-      }
-
-      postPingback(pingback, { status: "end", message: postData })
+      postPingback(pingback, {
+        status: "end",
+        message: { s3Dir: filename, files },
+        forwardData: task.forwardData,
+      })
     }
 
     cleanup(inputFilePath, outputDir)
