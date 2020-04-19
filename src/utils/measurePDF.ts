@@ -14,15 +14,12 @@ export default (pdfPath: string): Promise<number[][]> => {
     })
 
     pdfParser.on("pdfParser_dataReady", (pdfData) => {
-      const pageDims: number[][] = []
-
-      const width = pdfData.formImage.Width / MAGIC_NUMBER
-      const pages = pdfData.formImage.Pages
-
-      for (const page of pages) {
+      const pageDims = pdfData.formImage.Pages.map((page) => {
+        // page.Width is accessible because of modified pdf.js
+        const width = page.Width / MAGIC_NUMBER
         const height = page.Height / MAGIC_NUMBER
-        pageDims.push([width, height])
-      }
+        return [width, height]
+      })
 
       resolve(pageDims)
     })
