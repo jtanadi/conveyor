@@ -17,7 +17,7 @@ export default (
 
   // Make sure pingback address is provided
   if (!req.headers["x-pingback"]) {
-    throw new Error("Pingback required")
+    throw new Error("x-Pingback header required")
   }
 
   const pingback = req.headers["x-pingback"]

@@ -6,8 +6,11 @@ import { homeRoute, pingRoute, pdfRoute } from "./routes"
 
 const app = restana({
   errorHandler(err, req, res) {
-    console.error(err)
-    res.send("Server error", 500)
+    console.error("\x1b[31m%s\x1b[0m", `${err.name}: ${err.message}`)
+
+    if (err.message) {
+      res.send({ error: err.message }, 500)
+    }
   },
 })
 

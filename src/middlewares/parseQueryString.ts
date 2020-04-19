@@ -12,7 +12,7 @@ export default (
 
   if (Array.isArray(qs.out) || Array.isArray(qs.download)) {
     throw new Error(
-      "conveyor only accepts one 'out' param and one 'download' param"
+      "Conveyor only accepts one 'out' querystring parameter and one 'download' querystring parameter"
     )
   }
 
