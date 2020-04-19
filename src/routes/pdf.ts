@@ -2,6 +2,7 @@ import { Service, Protocol } from "restana"
 import {
   parseHeaders,
   parseQueryString,
+  processQueue,
   sendResponse,
   streamAndEnqueue,
 } from "../middlewares/"
@@ -12,6 +13,7 @@ export default (app: Service<Protocol.HTTPS | Protocol.HTTP>): void => {
     parseHeaders,
     parseQueryString,
     streamAndEnqueue,
-    sendResponse
+    sendResponse,
+    processQueue
   )
 }
