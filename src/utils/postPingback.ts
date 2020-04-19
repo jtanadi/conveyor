@@ -7,6 +7,10 @@ export default (pingbackAddress: string, data: string | PingbackData): void => {
     console.log("\x1b[33m%s\x1b[0m", "* No POST made to pingback URL *")
     console.log("DATA", data, "\n")
   } else {
-    axios.post(pingbackAddress, data)
+    try {
+      axios.post(pingbackAddress, data)
+    } catch (e) {
+      console.error(e)
+    }
   }
 }
