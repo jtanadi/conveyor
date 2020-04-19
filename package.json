@@ -1,6 +1,6 @@
 {
   "name": "pdf2img",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "PDF->image->S3",
   "main": "dist/index.js",
   "scripts": {
