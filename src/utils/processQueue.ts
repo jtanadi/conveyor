@@ -36,13 +36,21 @@ export default async (): Promise<void> => {
       })
     )
 
-    const files = await uploadToS3(outputDir, filename, outFileType)
-    const postData: PostData = { s3Dir: filename, files }
-    if (task.forwardData) {
-      postData.forwardData = task.forwardData
+    // Disable uploading and posting in testing
+    if (process.env.NODE_ENV !== "production" && process.env.LOCAL) {
+      console.warn("\x1b[30m\x1b[43m%s\x1b[0m", "CONVEYOR IN LOCAL DEV MODE")
+      console.log("\x1b[33m%s\x1b[0m", "* Converted files not uploaded")
+      console.log("\x1b[33m%s\x1b[0m", "* No POST made to pingback URL")
+    } else {
+      const files = await uploadToS3(outputDir, filename, outFileType)
+      const postData: PostData = { s3Dir: filename, files }
+      if (task.forwardData) {
+        postData.forwardData = task.forwardData
+      }
+
+      axios.post(pingback, postData)
     }
 
-    axios.post(pingback, postData)
     cleanup(inputFilePath, outputDir)
   } catch (e) {
     console.log(`Error with task ${task}`)
