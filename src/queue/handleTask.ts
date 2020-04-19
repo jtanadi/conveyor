@@ -33,7 +33,16 @@ export default async (task: Task): Promise<void> => {
         )
       })
     )
+  } catch (e) {
+    console.error(e)
+    return postPingback(pingback, {
+      status: "error",
+      message: `Error converting ${task.filename}`,
+      forwardData: task.forwardData,
+    })
+  }
 
+  try {
     postPingback(pingback, {
       status: "processing",
       message: "Uploading to S3",
@@ -59,10 +68,14 @@ export default async (task: Task): Promise<void> => {
         forwardData: task.forwardData,
       })
     }
-
-    cleanup(inputFilePath, outputDir)
   } catch (e) {
-    console.log(`Error with task ${task}`)
-    console.log(e.stack)
+    console.error(e)
+    return postPingback(pingback, {
+      status: "error",
+      message: `Error uploading ${task.filename} to S3`,
+      forwardData: task.forwardData,
+    })
   }
+
+  cleanup(inputFilePath, outputDir)
 }
