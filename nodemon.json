@@ -1,5 +1,5 @@
 {
   "watch": ["./src/"],
   "ext": "js,ts",
-  "exec": "PORT=$PORT ts-node ./src/index.ts"
+  "exec": "PORT=$PORT LOCAL=$LOCAL ts-node ./src/index.ts"
 }

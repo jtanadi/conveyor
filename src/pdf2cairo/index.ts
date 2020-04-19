@@ -24,14 +24,21 @@ class PDF2Cairo {
   convert(
     inputPath: string,
     outputPath: string,
-    outputFormat?: string
+    outputFormat: string = "jpeg",
+    resolution: number = 72
   ): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const format = outputFormat ? this.parseFormat(outputFormat) : "-jpeg"
-      const p2c = spawn("pdftocairo", [format, inputPath, outputPath])
+    return new Promise((resolve) => {
+      const format = this.parseFormat(outputFormat)
+      const p2c = spawn("pdftocairo", [
+        format,
+        "-r",
+        resolution.toString(),
+        inputPath,
+        outputPath,
+      ])
 
       p2c.stderr.on("data", (data) => {
-        reject(`pdftocairo error: ${data}`)
+        console.error(`pdftocairo error: ${data}`)
       })
 
       p2c.on("close", (code) => {

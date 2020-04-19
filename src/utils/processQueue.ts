@@ -3,7 +3,7 @@ import path from "path"
 
 import cleanup from "./cleanup"
 import measurePDF from "./measurePDF"
-import getResolution from "./getResolution"
+import getResolutions from "./getResolutions"
 import gs from "../gs"
 import queue from "./queue"
 import uploadToS3 from "./uploadToS3"
@@ -20,29 +20,38 @@ export default async (): Promise<void> => {
   const { pingback, filename, inputFilePath, outputDir, outFileType } = task
 
   try {
-    // Get page measurements and calculate resolution based on max sizes
-    // Measurements are arrays of [width, height]
     const measurements: number[][] = await measurePDF(inputFilePath)
-    const outputResolution = getResolution(measurements)
-
-    console.log(`Converting at ${outputResolution}DPI`)
-
+    const outputResolutions: number[] = getResolutions(measurements)
     const outputFilePath = path.join(outputDir, "page")
-    await gs.convert(
-      inputFilePath,
-      outputFilePath,
-      outFileType,
-      outputResolution
+
+    await Promise.all(
+      outputResolutions.map((resolution, i) => {
+        return gs.convert(
+          inputFilePath,
+          outputFilePath,
+          outFileType,
+          resolution,
+          i + 1
+        )
+      })
     )
 
-    const files = await uploadToS3(outputDir, filename, outFileType)
-    const postData: PostData = { s3Dir: filename, files }
-    if (task.forwardData) {
-      postData.forwardData = task.forwardData
+    // Disable uploading and posting in testing
+    if (process.env.NODE_ENV !== "production" && process.env.LOCAL) {
+      console.warn("\x1b[30m\x1b[43m%s\x1b[0m", "CONVEYOR IN LOCAL DEV MODE")
+      console.log("\x1b[33m%s\x1b[0m", "* Converted files not uploaded")
+      console.log("\x1b[33m%s\x1b[0m", "* No POST made to pingback URL")
+    } else {
+      const files = await uploadToS3(outputDir, filename, outFileType)
+      const postData: PostData = { s3Dir: filename, files }
+      if (task.forwardData) {
+        postData.forwardData = task.forwardData
+      }
+
+      axios.post(pingback, postData)
     }
 
-    await axios.post(pingback, postData)
-    cleanup(outputDir)
+    cleanup(inputFilePath, outputDir)
   } catch (e) {
     console.log(`Error with task ${task}`)
     console.log(e.stack)
