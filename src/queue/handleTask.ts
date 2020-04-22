@@ -1,12 +1,16 @@
 import path from "path"
 
-import cleanup from "../utils/cleanup"
-import measurePDF from "../utils/measurePDF"
-import getResolutions from "../utils/getResolutions"
-import postPingback from "../utils/postPingback"
 import gs from "../gs"
 import { Task } from "./"
-import uploadToS3 from "../utils/uploadToS3"
+
+import {
+  cleanup,
+  measurePDF,
+  optimize,
+  getResolutions,
+  postPingback,
+  uploadToS3,
+} from "../utils/"
 
 export default async (task: Task): Promise<void> => {
   const { pingback, filename, inputFilePath, outputDir, outFileType } = task
@@ -24,13 +28,15 @@ export default async (task: Task): Promise<void> => {
 
     await Promise.all(
       outputResolutions.map((resolution, i) => {
-        return gs.convert(
-          inputFilePath,
-          outputFilePath,
-          outFileType,
-          resolution,
-          i + 1
-        )
+        return gs
+          .convert(
+            inputFilePath,
+            outputFilePath,
+            outFileType,
+            resolution,
+            i + 1
+          )
+          .then(() => optimize(outputFilePath, i + 1))
       })
     )
   } catch (e) {
