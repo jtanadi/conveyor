@@ -1,15 +1,25 @@
 import { spawn } from "child_process"
 
-export default (filepath: string, page: number): Promise<void> => {
-  return new Promise((resolve) => {
-    const realFilepath = `${filepath}${page.toString().padStart(3, "0")}.png`
-    const opti = spawn("optipng", [realFilepath])
+export default (filepath: string): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    console.log(`optimizing ${filepath}`)
+    const opti = spawn("optipng", [filepath])
 
-    console.log(`optimizing ${realFilepath}`)
+    opti.on("error", (err) => {
+      console.error(err)
+    })
 
-    opti.on("close", (code: string) => {
-      resolve()
-      console.log(`optipng exited with code ${code}. Optimized ${realFilepath}`)
+    opti.on("close", (code: number) => {
+      // We have to check exit code here because
+      // `optipng` outputs its trial data to stderr
+      // so we can't do error handling with opti.stderr.on("error")
+      if (code !== 0) {
+        reject(`Error optimizing ${filepath}`)
+        console.error(`optipng exited with code ${code}`)
+      } else {
+        resolve()
+        console.log(`optipng exited with code ${code}. Optimized ${filepath}`)
+      }
     })
   })
 }
