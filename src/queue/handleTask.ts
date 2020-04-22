@@ -24,19 +24,19 @@ export default async (task: Task): Promise<void> => {
 
     const measurements: number[][] = await measurePDF(inputFilePath)
     const outputResolutions: number[] = getResolutions(measurements)
-    const outputFilePath = path.join(outputDir, "page")
+    const outputPath = path.join(outputDir, "page")
 
     await Promise.all(
-      outputResolutions.map((resolution, i) => {
-        return gs
-          .convert(
-            inputFilePath,
-            outputFilePath,
-            outFileType,
-            resolution,
-            i + 1
-          )
-          .then(() => optimize(outputFilePath, i + 1))
+      outputResolutions.map(async (resolution, i) => {
+        const outputFilePath = await gs.convert(
+          inputFilePath,
+          outputPath,
+          outFileType,
+          resolution,
+          i + 1
+        )
+
+        return optimize(outputFilePath)
       })
     )
   } catch (e) {
