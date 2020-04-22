@@ -1,12 +1,16 @@
 import path from "path"
 
-import cleanup from "../utils/cleanup"
-import measurePDF from "../utils/measurePDF"
-import getResolutions from "../utils/getResolutions"
-import postPingback from "../utils/postPingback"
 import gs from "../gs"
 import { Task } from "./"
-import uploadToS3 from "../utils/uploadToS3"
+
+import {
+  cleanup,
+  measurePDF,
+  optimize,
+  getResolutions,
+  postPingback,
+  uploadToS3,
+} from "../utils/"
 
 export default async (task: Task): Promise<void> => {
   const { pingback, filename, inputFilePath, outputDir, outFileType } = task
@@ -20,17 +24,19 @@ export default async (task: Task): Promise<void> => {
 
     const measurements: number[][] = await measurePDF(inputFilePath)
     const outputResolutions: number[] = getResolutions(measurements)
-    const outputFilePath = path.join(outputDir, "page")
+    const outputPath = path.join(outputDir, "page")
 
     await Promise.all(
-      outputResolutions.map((resolution, i) => {
-        return gs.convert(
+      outputResolutions.map(async (resolution, i) => {
+        const outputFilePath = await gs.convert(
           inputFilePath,
-          outputFilePath,
+          outputPath,
           outFileType,
           resolution,
           i + 1
         )
+
+        return optimize(outputFilePath)
       })
     )
   } catch (e) {
