@@ -33,26 +33,28 @@ class GhostAdaptor {
   private getArgs(
     device: string,
     inputPath: string,
-    outputPath: string,
-    extension: string,
+    outputFilePath: string,
     resolution: number,
     page?: number
   ): string[] {
     const retArgs = [device, `-r${resolution}`]
 
     if (page) {
-      retArgs.push(
-        `-sPageList=${page}`,
-        "-o",
-        `${outputPath}${page.toString().padStart(3, "0")}${extension}`
-      )
-    } else {
-      retArgs.push("-o", `${outputPath}%03d${extension}`)
+      retArgs.push(`-sPageList=${page}`)
     }
 
-    retArgs.push(inputPath)
-
+    retArgs.push("-o", outputFilePath, inputPath)
     return retArgs
+  }
+
+  private getOutputFilePath(
+    outputPath: string,
+    extension: string,
+    page?: number
+  ): string {
+    return page
+      ? `${outputPath}${page.toString().padStart(3, "0")}${extension}`
+      : `${outputPath}%03d${extension}`
   }
 
   convert(
@@ -61,14 +63,14 @@ class GhostAdaptor {
     outputFormat: string = "jpeg",
     resolution: number = 72,
     page?: number
-  ): Promise<void> {
+  ): Promise<string> {
     return new Promise((resolve, reject) => {
       const { device, extension } = this.parseFormat(outputFormat)
+      const outputFilePath = this.getOutputFilePath(outputPath, extension, page)
       const gsArgs = this.getArgs(
         device,
         inputPath,
-        outputPath,
-        extension,
+        outputFilePath,
         resolution,
         page
       )
@@ -79,9 +81,11 @@ class GhostAdaptor {
         reject(`ghostscript error: ${data}`)
       })
 
-      gsProcess.on("close", (code: string): void => {
-        resolve()
-        console.log(`ghostscript exited with code ${code}`)
+      gsProcess.on("close", (code: number): void => {
+        console.log(
+          `ghostscript exited with code ${code} and outputted ${outputFilePath}`
+        )
+        resolve(outputFilePath)
       })
     })
   }
