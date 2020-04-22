@@ -14,11 +14,11 @@ export default (filepath: string): Promise<void> => {
       // `optipng` outputs its trial data to stderr
       // so we can't do error handling with opti.stderr.on("error")
       if (code !== 0) {
-        reject(`Error optimizing ${filepath}`)
         console.error(`optipng exited with code ${code}`)
+        reject(`Error optimizing ${filepath}`)
       } else {
-        resolve()
         console.log(`optipng exited with code ${code}. Optimized ${filepath}`)
+        resolve()
       }
     })
   })
