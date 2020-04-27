@@ -68,7 +68,7 @@ export default async (task: Task): Promise<void> => {
       })
     } else {
       const files = await uploadToS3(outputDir, filename, outFileType)
-      postPingback(pingback, {
+      await postPingback(pingback, {
         status: "end",
         message: { s3Dir: filename, files },
         forwardData: task.forwardData,

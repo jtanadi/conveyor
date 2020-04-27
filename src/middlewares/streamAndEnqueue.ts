@@ -34,7 +34,7 @@ export default (
       forwardData: req.forwardData,
     }
 
-    postPingback(req.pingback, {
+    await postPingback(req.pingback, {
       status: "processing",
       message: "Queuing up task",
       forwardData: task.forwardData,
