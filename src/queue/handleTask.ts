@@ -16,7 +16,7 @@ export default async (task: Task): Promise<void> => {
   const { pingback, filename, inputFilePath, outputDir, outFileType } = task
 
   try {
-    postPingback(pingback, {
+    await postPingback(pingback, {
       status: "processing",
       message: "Converting file",
       forwardData: task.forwardData,
@@ -49,7 +49,7 @@ export default async (task: Task): Promise<void> => {
   }
 
   try {
-    postPingback(pingback, {
+    await postPingback(pingback, {
       status: "processing",
       message: "Uploading to S3",
       forwardData: task.forwardData,
