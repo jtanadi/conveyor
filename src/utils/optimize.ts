@@ -3,7 +3,7 @@ import { spawn } from "child_process"
 export default (filepath: string): Promise<void> => {
   return new Promise((resolve, reject) => {
     console.log(`optimizing ${filepath}`)
-    const opti = spawn("optipng", [filepath])
+    const opti = spawn("optipng", ["-o2", filepath])
 
     opti.on("error", (err) => {
       console.error(err)
