@@ -20,7 +20,7 @@ export default (
   if (!qs.out) {
     outFileType = "png"
   } else if (/^jpe?g$/i.test(qs.out)) {
-    outFileType = "jpg"
+    outFileType = "jpeg"
   } else if (/^tiff?$/i.test(qs.out)) {
     outFileType = "tif"
   } else {
