@@ -1,6 +1,6 @@
 {
   "name": "pdf2img",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "A microservice for converting PDFs to images and uploading them to AWS S3.",
   "main": "dist/index.js",
   "scripts": {
