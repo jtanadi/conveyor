@@ -6,7 +6,7 @@ import { Task } from "./"
 import {
   cleanup,
   measurePDF,
-  optimize,
+  optimizePNG,
   getResolutions,
   postPingback,
   uploadToS3,
@@ -36,7 +36,10 @@ export default async (task: Task): Promise<void> => {
           i + 1
         )
 
-        return optimize(outputFilePath)
+        if (outFileType === "png") {
+          return optimizePNG(outputFilePath)
+        }
+        return outputFilePath
       })
     )
   } catch (e) {
@@ -62,7 +65,7 @@ export default async (task: Task): Promise<void> => {
         status: "end",
         message: {
           s3Dir: "s3-directory-abcde",
-          files: ["sample-file1.png", "sample-file2.png"],
+          files: ["sample-file1.ext", "sample-file2.ext"],
         },
         forwardData: task.forwardData,
       })
