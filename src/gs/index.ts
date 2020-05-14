@@ -16,8 +16,8 @@ class GhostAdaptor {
       outputFormat = outputFormat.slice(1)
     }
 
-    if (outputFormat === "jpeg") {
-      outputFormat = "jpg"
+    if (outputFormat === "jpg") {
+      outputFormat = "jpeg"
     } else if (outputFormat === "tiff") {
       outputFormat = "tif"
     }
@@ -37,10 +37,21 @@ class GhostAdaptor {
     resolution: number,
     page?: number
   ): string[] {
-    const retArgs = [device, `-r${resolution}`]
+    const subsampleBox = 4
+    const retArgs = [
+      device,
+      `-r${resolution}`,
+      `-dTextAlphaBits=${subsampleBox}`,
+      `-dGraphicsAlphaBits=${subsampleBox}`,
+    ]
 
     if (page) {
       retArgs.push(`-sPageList=${page}`)
+    }
+
+    if (device === "-sDEVICE=jpeg") {
+      const jpegQuality = 85
+      retArgs.push(`-dJPEGQ=${jpegQuality}`)
     }
 
     retArgs.push("-o", outputFilePath, inputPath)
