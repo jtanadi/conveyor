@@ -17,7 +17,7 @@
   "author": "JT",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.654.0",
+    "aws-sdk": "^2.814.0",
     "axios": "^0.19.2",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
