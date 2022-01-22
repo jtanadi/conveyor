@@ -21,7 +21,7 @@
     "axios": "^0.19.2",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
-    "nanoid": "^3.0.2",
+    "nanoid": "^3.1.31",
     "pdf2json": "raa-tools/pdf2json#master",
     "restana": "^4.3.1",
     "rimraf": "^3.0.2"
