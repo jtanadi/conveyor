@@ -1,3 +1,6 @@
+# ARCHIVED AS OF AUGUST 30 2022
+Heroku is deprecating its free tier, so there's no host for this service.
+
 # Conveyor
 
 Converyor-belt-like service for file conversion.
